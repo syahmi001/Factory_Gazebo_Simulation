@@ -1,0 +1,194 @@
+<?xml version="1.0" ?>
+
+<robot name="delta_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  
+  <!-- BGN - Include -->
+  <xacro:include filename="$(find delta_robot_description)/urdf/parameter.xacro" />
+  <xacro:include filename="$(find delta_robot_description)/urdf/links_and_joints.xacro" />
+  <!-- END - Include -->
+  
+  <!-- BGN - Robot description -->
+
+ <m_link_cylinder name="${link_00_name}"
+              origin_rpy="0 0 0" origin_xyz="0 0 0"
+              mass="47"
+              ixx="1.765" ixy="0" ixz="0"
+              iyy="1.765" iyz="0"
+              izz="3.217"
+              radius="0.37" length="0.2" />
+
+
+<!-- change effort and velocity later -->
+<!-- change also the degree limit -->
+
+
+<!-- change the length of box and mass later -->
+<!-- pair 1 of delta hand -->
+
+  <m_joint name="${link_00_name}__${link_01_name}" type="revolute"
+           axis_xyz="1 0 0"
+           origin_rpy="0 0 0" origin_xyz="0 0.37 0"
+           parent="base_link" child="link_01"
+           limit_e="1000" limit_l="-1.571" limit_u="1.571" limit_v="0.5" />
+
+  <m_link_box name="${link_01_name}"
+              origin_rpy="0 0 0" origin_xyz="0 0.25 0"
+              mass="0.5"
+              ixx="0.065" ixy="0" ixz="0"
+              iyy="0.065" iyz="0"
+              izz="0.005"
+              size="0.1 0.5 0.1" />
+              
+  <m_joint name="${link_01_name}__${link_02_name}" type="revolute"
+           axis_xyz="1 0 0"
+           origin_rpy="-0.94 0 0" origin_xyz="0 0.45 -0.1"
+           parent="link_01" child="link_02"
+           limit_e="1000" limit_l="-0.4" limit_u="1.571" limit_v="0.5" />
+           
+  <m_link_box name="${link_02_name}"
+              origin_rpy="0 0 0" origin_xyz="0 0 -0.45"
+              mass="0.5"
+              ixx="0.2525" ixy="0" ixz="0"
+              iyy="0.005" iyz="0"
+              izz="0.2525"
+              size="0.1 0.1 1" />
+
+
+<!-- end effector link -->
+<!-- top to bottom, bottom to top -->
+<!-- origin_rpy="1.5708 0 0" origin_xyz="0 0.3 0.015" -->
+
+  <m_joint name="${link_02_name}__${link_07_name}" type="revolute"
+           axis_xyz="1 0 0"
+           origin_rpy="-0.631 0 0" origin_xyz="0 -0.01 -1"
+           parent="link_02" child="link_07"
+           limit_e="1000" limit_l="1.571" limit_u="1.571" limit_v="0.5" />
+
+   <!-- <m_joint name="${link_00_name}__${link_07_name}" type="revolute"
+           axis_xyz="1 0 0"
+           origin_rpy="1.5708 0 0" origin_xyz="0 0 -0.78"
+           parent="base_link" child="link_07"
+           limit_e="1000" limit_l="1.571" limit_u="1.571" limit_v="0.5" /> -->
+
+
+  <m_link_cylinder name="${link_07_name}"
+              origin_rpy="0 0 0" origin_xyz="0 0 0"
+              mass="2"
+              ixx="0.0004" ixy="0" ixz="0"
+              iyy="0.0004" iyz="0"
+              izz="0.0006"
+              radius="0.15" length="0.03" />
+
+<!-- adding another 2 links at the end effector for the closed loop -->
+
+      <!-- -0.31 -0.5369 -0.1 -->
+      <!-- -2.202 -->
+
+    <m_joint name="${link_07_name}__${link_04_name}" type="revolute"
+           axis_xyz="1 0 0"
+           origin_rpy="-2.272 0 -1.0472" origin_xyz="-0.13 -0.075 0.05"
+           parent="link_07" child="link_04"
+           limit_e="1000" limit_l="-1.571" limit_u="1.571" limit_v="0.5" />
+           
+  <m_link_box name="${link_04_name}"
+              origin_rpy="0 0 0" origin_xyz="0 0 -0.45"
+              mass="0.5"
+              ixx="0.2525" ixy="0" ixz="0"
+              iyy="0.005" iyz="0"
+              izz="0.2525"
+              size="0.1 0.1 1" />
+
+      <!-- -0.31 -0.5369 -0.1 -->
+      <!-- -2.9875 -->
+    <m_joint name="${link_07_name}__${link_06_name}" type="revolute"
+           axis_xyz="1 0 0"
+           origin_rpy="-2.202 0 1.0472" origin_xyz="0.13 -0.075 0.05"
+           parent="link_07" child="link_06"
+           limit_e="1000" limit_l="-1.571" limit_u="1.571" limit_v="0.5" />
+           
+  <m_link_box name="${link_06_name}"
+              origin_rpy="0 0 0" origin_xyz="0 0 -0.45"
+              mass="0.5"
+              ixx="0.2525" ixy="0" ixz="0"
+              iyy="0.005" iyz="0"
+              izz="0.2525"
+              size="0.1 0.1 1" />
+
+
+<!-- the last 2 links to complete the closed loop -->
+
+<!-- origin_rpy="0 0 -1.0472" origin_xyz="-0.321 -0.185 0"  -->
+           <!-- origin_rpy="0 0 1" origin_xyz="-0.821 -0.185 0.05"  -->
+  <!-- <m_joint name="${link_03_name}__${link_00_name}" type="revolute"
+           axis_xyz="1 0 0"
+           origin_rpy="0 0 0" origin_xyz="0 0 0" 
+           parent="link_03" child="base_link"
+           limit_e="1000" limit_l="-1.571" limit_u="1.571" limit_v="0.5" /> -->
+
+           <!-- origin_rpy="0.8 0 0" origin_xyz="0 -0.45 -0.1" -->
+            <!-- origin_rpy="-1.5708 0.523599 0" origin_xyz="0.1 0 -1" -->
+  <m_joint name="${link_04_name}__${link_03_name}" type="revolute"
+           axis_xyz="1 0 0"
+           origin_rpy="-1.0136 0 0" origin_xyz="0 -0.08 -1"
+           parent="link_04" child="link_03"
+           limit_e="1000" limit_l="-1.571" limit_u="1.571" limit_v="0.5" />
+
+  <m_link_box name="${link_03_name}"
+              origin_rpy="0 0 0" origin_xyz="0 -0.25 0"
+              mass="0.5"
+              ixx="0.065" ixy="0" ixz="0"
+              iyy="0.065" iyz="0"
+              izz="0.005"
+              size="0.1 0.5 0.1" />
+
+  <!-- <m_joint name="${link_05_name}__${link_00_name}" type="revolute"
+           axis_xyz="1 0 0"
+           origin_rpy="0 0 1.0472" origin_xyz="0.321 -0.185 0" 
+           parent="link_05" child="base_link"
+           limit_e="1000" limit_l="-1.571" limit_u="1.571" limit_v="0.5" />
+
+  <m_link_box name="${link_05_name}"
+              origin_rpy="0 0 0" origin_xyz="0 -0.25 0"
+              mass="0.5"
+              ixx="0.065" ixy="0" ixz="0"
+              iyy="0.065" iyz="0"
+              izz="0.005"
+              size="0.1 0.5 0.1" /> -->
+
+              
+  <!-- END - Robot description -->
+  
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+    </plugin>
+
+     
+    <plugin name="Myrobot_ClosedLoopPlugin" filename="libpegasus_gazebo_closed_loop_plugin.so">
+       <joint>link_03__base_link</joint>
+       <child>base_link</child>
+       <parent>link_03</parent>
+       <rotation>0 0 0</rotation>
+       <position>0.0 -0.00 0.00</position>
+   </plugin>
+
+    <!-- <plugin name="Myrobot_ClosedLoopPlugin" filename="libpegasus_gazebo_closed_loop_plugin.so">
+       <joint>link_03__link_04</joint>
+       <child>link_04</child>
+       <parent>link_03</parent>
+       <rotation>0 0 0</rotation>
+       <position>0.00 -0.00 0.00</position>
+   </plugin>
+
+    <plugin name="Myrobot_ClosedLoopPlugin" filename="libpegasus_gazebo_closed_loop_plugin.so">
+       <joint>link_045__link_06</joint>
+       <child>link_06</child>
+       <parent>link_05</parent>
+       <rotation>0 0 0</rotation>
+       <position>0.00 -0.00 0.00</position>
+   </plugin> -->
+
+
+
+  </gazebo>
+  
+</robot>
