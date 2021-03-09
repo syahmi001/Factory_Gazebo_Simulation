@@ -5,6 +5,7 @@ import numpy as np
 #---------------------------#
 #-------- ROS Libraries --------#
 import rospy
+from std_msgs.msg import Float64
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Header
 import geometry_msgs.msg
@@ -12,18 +13,7 @@ import tf
 
 import time
 #-------------------------------#
-#-------- Node initialization --------#
-rospy.init_node('delta_robot') # Node initialization in ROS
-broadcaster = tf.TransformBroadcaster()
-odom_trans = geometry_msgs.msg.TransformStamped()
-joint_state = JointState()
-odom_trans.header.frame_id = 'odom'
-odom_trans.child_frame_id = 'base_link'
-joint_state.header = Header()
-joint_state.name = ['joint1', 'joint4', 'joint6',
-'joint2', 'joint5',
-'joint7','joint3']
-#-------------------------------------#
+
 #-------- Variables --------#
 L = 0.300 # Upper legs length
 l = 0.800 # Lower legs length
@@ -45,8 +35,8 @@ final_angle_lower_arm2 = np.zeros(1)
 final_angle_lower_arm3 = np.zeros(1)
 end_effector = np.zeros(1)
 k=0 #Flag for changing coordinates
+#-------------------------------#
 
-#---------------------------#
 #-------- Function block for calculating angles --------#
 def calculate_delta_robot_angle():
  #-------- Calculate a, b, c --------#
@@ -108,61 +98,70 @@ def calculate_angle_lower_arms():
  final_angle_lower_arm3[0] = beta3 - alpha3 - (math.pi/2) + 0.1
  end_effector[0] = (angle_upper_arm_rad_2[0] + final_angle_lower_arm1[0]) * -1
 
- #-------- Function block for sending joint state to URDF --------#
-def send_joint_state_to_urdf():
-    joint_state.header.stamp = rospy.Time.now()
-    joint_state.position = [upper_arm_1, upper_arm_2, upper_arm_3, lower_arm_1,lower_arm_2,lower_arm_3, effector]
-    odom_trans.header.stamp = rospy.Time.now()
-    pub.publish(joint_state)
-    # broadcaster.sendTransform((upper_arm_1, upper_arm_2, upper_arm_3), (lower_arm_1,lower_arm_2,lower_arm_3, effector), rospy.Time.now(),'base_link','odom')
-    broadcaster.sendTransform((0.0, 0.0, 0.0), (0.0, 0.0, 0.0, 1.0), rospy.Time.now(),'base_link','odom')
-#----------------------------------------------------------------#
+def controller():
+    pub = rospy.Publisher('/delta_robot/joint1_position_controller/command', Float64, queue_size=10)
+    pub2 = rospy.Publisher('/delta_robot/joint2_position_controller/command', Float64, queue_size=10)
+    pub3 = rospy.Publisher('/delta_robot/joint3_position_controller/command', Float64, queue_size=10)
+    pub4 = rospy.Publisher('/delta_robot/joint4_position_controller/command', Float64, queue_size=10)
+    pub5 = rospy.Publisher('/delta_robot/joint5_position_controller/command', Float64, queue_size=10)
+    pub6 = rospy.Publisher('/delta_robot/joint6_position_controller/command', Float64, queue_size=10)
+    pub7 = rospy.Publisher('/delta_robot/joint7_position_controller/command', Float64, queue_size=10)
+    rospy.init_node('joint_pub', anonymous=True)
+    rate = rospy.Rate(10) # 10hz
+    while not rospy.is_shutdown():
+        # hello_str = "hello world %s" % rospy.get_time()
+        joint_1_value = joint1
+        joint_2_value = joint2
+        joint_3_value = joint3
+        joint_4_value = joint4
+        joint_5_value = joint5
+        joint_6_value = joint6
+        joint_7_value = joint7
+        pub.publish(joint_1_value)
+        pub2.publish(joint_2_value)
+        pub3.publish(joint_3_value)
+        pub4.publish(joint_4_value)
+        pub5.publish(joint_5_value)
+        pub6.publish(joint_6_value)
+        pub7.publish(joint_7_value)
+        rate.sleep()
 
-#-------- Definition of publisher --------#
-pub = rospy.Publisher('joint_states', JointState, queue_size=10)
-#-----------------------------------------#
-#-------- Main program --------#
-r = rospy.Rate(1000)
-#------------------------------#
-#-------- Infinite loop --------#
-while not rospy.is_shutdown():
-#------------------------------#
-#-------- Three coordinates changing --------#
-    x = 0.0
-    y = 0.0
-    z = -0.5
-    # if k == 0:
-    #     x = 0.0 ##Coordinates
-    #     y = 0.0
-    #     z = -0.5
-    # if k == 1:
-    #     x = 0.0
-    #     y = 0.0
-    #     z = -0.7
-    # if k == 2:
-    #     x = 0.0
-    #     y = 0.0
-    #     z = -1.0
-#--------------------------------------------#
-    calculate_delta_robot_angle() #Call function calculate_delta_robot_angle
-    calculate_angle_lower_arms()
-    upper_arm_1 = angle_upper_arm_rad_2[0]
-    upper_arm_2 = angle_upper_arm_rad_2[1]
-    upper_arm_3 = angle_upper_arm_rad_2[2]
-    lower_arm_1 = final_angle_lower_arm1
-    lower_arm_2 = final_angle_lower_arm2
-    lower_arm_3 = final_angle_lower_arm3
-    effector = end_effector
-    send_joint_state_to_urdf() #Call function send_joint_state_to_urdf
-    # time.sleep(5)
-    # k=k+1
-    # if k == 3:
-    #     k = 0
-    print angle_upper_arm_deg_2
-    print angle_upper_arm_rad_2
-    print final_angle_lower_arm1 #angulo lower arm
-    print final_angle_lower_arm2 #angulo lower arm
-    print final_angle_lower_arm3 #angulo lower arm
-    print end_effector
-    r.sleep()
+# def start():
+    
+    
 
+# def check():
+#     print("Enter value again?: ")
+#     answer = str(input())
+#     if answer in ['y', 'Y', 'yes', 'Yes', 'YES']:
+#         start()
+#     else: 
+#         quit()
+
+
+if __name__ == '__main__':
+    try:
+        # print("enter your x value here: ")
+        # x = float(input())
+        # print("enter your y value here: ")
+        # y= float(input())
+        # print("enter your z value here: ")
+        # z= float(input())
+
+        x = -0.3
+        y = 0.0
+        z = -0.5
+        calculate_delta_robot_angle() #Call function calculate_delta_robot_angle
+        calculate_angle_lower_arms()
+
+        joint1 = angle_upper_arm_rad_2[0]
+        joint4 = angle_upper_arm_rad_2[1]
+        joint6 = angle_upper_arm_rad_2[2]
+        joint2 = final_angle_lower_arm1
+        joint5 = final_angle_lower_arm2
+        joint7 = final_angle_lower_arm3
+        joint3 = end_effector
+        controller()
+        # check()
+    except rospy.ROSInterruptException:
+        pass
