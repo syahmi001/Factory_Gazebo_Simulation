@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<robot name="pole">
+<!-- world link -->
+<link name="world"/>
+
+<!-- base_link and its fixed joint -->
+<joint name="joint_fix" type="fixed">
+  <parent link="world"/>
+  <child link="base_link"/>
+</joint>
+
+<link name="base_link">
+  <collision>
+    <origin xyz="0 0 0.7" rpy="0 0 0"/>
+    <geometry>
+      <box size="0.1 0.1 1.4"/>
+    </geometry>
+  </collision>
+
+  <visual>
+    <origin xyz="0 0 0.7" rpy="0 0 0"/>
+    <geometry>
+    <box size="0.1 0.1 1.4"/>
+      <!-- <cylinder length="0.4" radius="0.1"/> -->
+    </geometry>
+  </visual>
+
+  <inertial>
+    <origin xyz="0 0 0.1" rpy="0 0 0"/>
+    <mass value="1"/>
+    <inertia
+      ixx="1.0" ixy="0.0" ixz="0.0"
+      iyy="1.0" iyz="0.0"
+      izz="1.0"/>
+  </inertial>
+</link>
+
+<gazebo reference="base_link">
+  <material>Gazebo/Black</material>
+</gazebo>
+
+
+<!-- the first arm of the pole, middle link -->
+<joint name="joint_fix1" type="fixed">
+  <parent link="base_link"/>
+  <child link="arm1"/>
+</joint>
+
+<link name="arm1">
+  <collision>
+    <origin xyz="0 0 1.4" rpy="0 0 0"/>
+    <geometry>
+      <box size="0.1 4.1 0.1"/>
+    </geometry>
+  </collision>
+
+  <visual>
+    <origin xyz="0 -2 1.4" rpy="0 0 0"/>
+    <geometry>
+      <box size="0.1 4.1 0.1"/>
+    </geometry>
+  </visual>
+
+  <inertial>
+    <origin xyz="0 -2 1.4" rpy="0 0 0"/>
+    <mass value="1"/>
+    <inertia
+      ixx="0.001" ixy="0.0" ixz="0.0"
+      iyy="0.001" iyz="0.0"
+      izz="0.001"/>
+  </inertial>
+</link>
+
+<gazebo reference="arm1">
+  <material>Gazebo/Black</material>
+</gazebo>
+
+
+<!-- middle_link, place for camera -->
+<joint name="joint_fix3" type="fixed">
+  <parent link="arm1"/>
+  <child link="middle_link"/>
+</joint>
+
+<link name="middle_link">
+  <collision>
+    <origin xyz="0 -2 1.1" rpy="0 0 0"/>
+    <geometry>
+      <box size="0.1 0.1 0.6"/>
+    </geometry>
+  </collision>
+
+  <visual>
+    <origin xyz="0 -2 1.1" rpy="0 0 0"/>
+    <geometry>
+      <box size="0.1 0.1 0.6"/>
+      <!-- <cylinder length="0.4" radius="0.1"/> -->
+    </geometry>
+  </visual>
+
+  <inertial>
+    <origin xyz="0 -2 0.1" rpy="0 0 0"/>
+    <mass value="1"/>
+    <inertia
+      ixx="1.0" ixy="0.0" ixz="0.0"
+      iyy="1.0" iyz="0.0"
+      izz="1.0"/>
+  </inertial>
+</link>
+
+<gazebo reference="middle_link">
+  <material>Gazebo/Black</material>
+</gazebo>
+
+<!-- the second arm of the pole/link -->
+<joint name="joint_fix2" type="fixed">
+  <parent link="arm1"/>
+  <child link="arm2"/>
+</joint>
+
+<link name="arm2">
+  <collision>
+    <origin xyz="0 -4 0.7" rpy="0 0 0"/>
+    <geometry>
+      <box size="0.1 0.1 1.4"/>
+    </geometry>
+  </collision>
+
+  <visual>
+    <origin xyz="0 -4 0.7" rpy="0 0 0"/>
+    <geometry>
+      <box size="0.1 0.1 1.4"/>
+    </geometry>
+  </visual>
+
+  <inertial>
+    <origin xyz="0 0 0.1" rpy="0 0 0"/>
+    <mass value="1"/>
+    <inertia
+      ixx="0.001" ixy="0.0" ixz="0.0"
+      iyy="0.001" iyz="0.0"
+      izz="0.001"/>
+  </inertial>
+</link>
+
+<gazebo reference="arm2">
+  <material>Gazebo/Black</material>
+</gazebo>
+
+
+</robot>
+
+
