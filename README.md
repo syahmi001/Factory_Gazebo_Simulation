@@ -5,4 +5,9 @@
  Link: https://github.com/catkin/catkin_simple
  
  The final output should look like this:
- ![alt text](gif/my-image.gif)
+ 
+ 
+ 
+ 
+ 
+ ![alt text](gif/camera_conveyer6.gif)
